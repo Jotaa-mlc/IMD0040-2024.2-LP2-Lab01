@@ -1,7 +1,7 @@
-import UI.UserIO;
+import UI.HomeIO;
 
 public class Main {
     public static void main(String[] args) {
-        UserIO.printHome();
+        HomeIO.printHome();
     }
 }
