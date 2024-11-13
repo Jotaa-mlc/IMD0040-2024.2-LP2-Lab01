@@ -5,13 +5,6 @@ public class Client {
     private final String CPF;
     private final String Password;
 
-//    public static boolean matchClient(Client a, Client b) {
-//        boolean match;
-//        match = a.CPF.equals(b.CPF);
-//        match = a.Password.equals(b.Password);
-//        match = a.Name.equals(b.Name);
-//        return match;
-//    }
     public Client(String name, String CPF, String Password) {
         this.Name = name;
         this.CPF = CPF;

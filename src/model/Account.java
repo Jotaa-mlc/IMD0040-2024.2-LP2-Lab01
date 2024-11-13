@@ -24,10 +24,10 @@ public class Account {
     }
     @Override
     public String toString() {
-        return "Account ID: " + id + " | Type: " + type;
+        return "Conta ID: " + id + " | Tipo: " + type;
     }
     public void print(){
-        System.out.println("Conta ID: " + id + " | Tipo: " + type + " | Saldo: " + balance + " | Proprietário: " + owner.getName());
+        System.out.println("Conta ID: " + id + " | Tipo: " + type + String.format(" | Saldo: R$ %.2f", balance) + " | Proprietário: " + owner.getName());
     }
     public float getBalance() { return balance; }
     public void deposit(float amount) { this.balance += amount; }

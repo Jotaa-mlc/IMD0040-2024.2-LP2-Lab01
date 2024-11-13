@@ -13,16 +13,16 @@ public class IO {
         }
 
         int leftPadding = (width - text.length()) / 2;
-        int rightPadding = width - leftPadding;
+        int rightPadding = width - leftPadding - text.length();
 
         return fill.repeat(leftPadding) + text + fill.repeat(rightPadding);
     }
     public static void printOptions(List<String> options) {
         System.out.println("/" + "-".repeat(width) + "\\");
         System.out.println("|" + " ".repeat(width) + "|");
-        for (String option : options) {
-            int i = 1;
-            System.out.println("|" + centerText(i++ + " - " + option, " ") + "|");
+        for (int i = 0; i < options.size(); i++) {
+
+            System.out.println("|" + centerText(i+1 + " - " + options.get(i), " ") + "|");
         }
         System.out.println("\\" + "-".repeat(width) + "/");
     }

@@ -25,19 +25,21 @@ public class MenuIO extends Bank {
         List<Account> accounts = Bank.getAccountsByOwner(client);
 
         if (accounts.isEmpty()) {
-            System.out.println("Não temos nenhuma conta registrada no seu nome.\nDeseja criar uma? 1 - para sim");
+            System.out.println("Não temos nenhuma conta registrada no seu nome.\nDeseja abrir uma? 1 - para sim");
             int command = sc.nextInt();
-            if (command == 1) addAccount(client);
+            sc.nextLine();
+            if (command == 1) printMenu(addAccount(client), client);
         } else if (accounts.size() == 1) {
-            printMenu(accounts.getFirst());
+            printMenu(accounts.getFirst(), client);
         } else {
             System.out.println("Favor escolha entre uma de suas contas, informe o ID.");
             for (Account account : accounts) System.out.println(account.toString());
             int id = sc.nextInt();
+            sc.nextLine();
 
             for (Account account : accounts) {
                 if (account.getId() == id){
-                    printMenu(account);
+                    printMenu(account, client);
                 }
                 else {
                     System.out.println("Você não possui nenhuma conta com esse ID.");
@@ -45,13 +47,14 @@ public class MenuIO extends Bank {
             }
         }
     }
-    public static void printMenu(Account account) {
+    public static void printMenu(Account account, Client client) {
         boolean logout = false;
 
         while (!logout) {
-            System.out.println("Logado: " + account.getOwnerName() + "ID da Conta: " + account.getId());
+            System.out.println("Logado: " + account.getOwnerName() + " | ID da Conta: " + account.getId());
             IO.printOptions(menuOptions);
             int command = sc.nextInt();
+            sc.nextLine();
             switch (command) {
                 case 1://Transferir
                     transfer(account);
@@ -66,7 +69,7 @@ public class MenuIO extends Bank {
                     balance(account);
                     break;
                 case 5://Adicionar Conta
-                    addAccount(account);
+                    addAccount(client);
                     break;
                 case 6://Logout
                     logout = true;
@@ -131,13 +134,13 @@ public class MenuIO extends Bank {
     private static void balance(Account account) {
         System.out.printf("Saldo atual: R$ %.2f%n", account.getBalance());
     }
-    private static void addAccount(Client client) {
+    private static Account addAccount(Client client) {
         System.out.println(IO.centerText("Adicionando Conta", "-"));
         System.out.println("Qual tipo de conta deseja abrir?\t1 - Corrente\t2 - Poupança");
         int opt = sc.nextInt();
         if (opt > 2 || opt < 1) {
             System.out.println("Tipo de conta inválido! Cancelando operação...");
-            return;
+            return null;
         }
         String type = opt == 1 ? "Corrente" : "Poupança";
         Account account = new Account(type, client);
@@ -145,5 +148,6 @@ public class MenuIO extends Bank {
 
         System.out.println("Conta criada com sucesso!");
         account.print();
+        return account;
     }
 }

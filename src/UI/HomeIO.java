@@ -23,6 +23,7 @@ public class HomeIO extends IO {
             System.out.println("#" + centerText(greetings, " ") + "#");
             printOptions(homeOptions);
             int command = sc.nextInt();
+            sc.nextLine();
             switch (command) {
                 case 1://Login
                     login();
@@ -50,7 +51,7 @@ public class HomeIO extends IO {
 
         Client client = Bank.login(cpf, password);
         if (client != null) {
-            System.out.print("Olá, seja bem vindo " + client.getName() + "!");
+            System.out.println("Olá, seja bem vindo " + client.getName() + "!");
             MenuIO.chooseAccount(client);
         }
         else {
@@ -67,10 +68,18 @@ public class HomeIO extends IO {
         System.out.print("Senha: ");
         password = sc.nextLine();
 
+        if (name.isBlank() || cpf.isBlank() || password.isBlank()) {
+            System.out.println("Nenhum dos campos podem ser vazios!\nNão foi possível adicionar novo cliente!");
+            return;
+        }
+
         Client client = new Client(name, cpf, password);
 
         if (!Bank.addClient(client)) {
             System.out.println("Não foi possível adicionar o novo cliente! Já existe um com este CPF.");
+        }
+        else {
+            System.out.println("Cliente adicionado com sucesso!");
         }
     }
     private static void printGoodBye() {
