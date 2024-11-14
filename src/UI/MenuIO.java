@@ -51,7 +51,7 @@ public class MenuIO extends Bank {
         boolean logout = false;
 
         while (!logout) {
-            System.out.println("Logado: " + account.getOwnerName() + " | ID da Conta: " + account.getId());
+            System.out.println("Logado - " + account.getOwnerName() + " | ID da Conta: " + account.getId());
             IO.printOptions(menuOptions);
             int command = sc.nextInt();
             sc.nextLine();
@@ -82,6 +82,7 @@ public class MenuIO extends Bank {
         System.out.println("Encerrando sua secção...");
     }
     private static void transfer(Account account) {
+        System.out.println("Transferência - " + account.getOwnerName() + " | ID da Conta: " + account.getId());
         System.out.print("Informe ID da conta para transferir: ");
         int id = sc.nextInt();
         System.out.print("Qual valor deseja transferir? ");
@@ -104,6 +105,7 @@ public class MenuIO extends Bank {
         System.out.println("Cancelando operação...");
     }
     private static void deposit(Account account) {
+        System.out.println("Depósito - " + account.getOwnerName() + " | ID da Conta: " + account.getId());
         System.out.print("Qual valor deseja depositar? ");
         float value = sc.nextFloat();
         if(Bank.deposit(value, account) == 1) {
@@ -115,6 +117,7 @@ public class MenuIO extends Bank {
         System.out.println("Cancelando operação...");
     }
     private static void withdraw(Account account) {
+        System.out.println("Saque - " + account.getOwnerName() + " | ID da Conta: " + account.getId());
         System.out.print("Qual valor deseja sacar? ");
         float value = sc.nextFloat();
         switch (Bank.withdraw(value,account)){
@@ -132,10 +135,11 @@ public class MenuIO extends Bank {
         System.out.println("Cancelando operação...");
     }
     private static void balance(Account account) {
+        System.out.println("Saldo - " + account.getOwnerName() + " | ID da Conta: " + account.getId());
         System.out.printf("Saldo atual: R$ %.2f%n", account.getBalance());
     }
     private static Account addAccount(Client client) {
-        System.out.println(IO.centerText("Adicionando Conta", "-"));
+        System.out.println("Adicionar Conta - " + client.getName());
         System.out.println("Qual tipo de conta deseja abrir?\t1 - Corrente\t2 - Poupança");
         int opt = sc.nextInt();
         if (opt > 2 || opt < 1) {

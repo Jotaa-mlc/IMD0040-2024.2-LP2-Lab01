@@ -43,7 +43,7 @@ public class HomeIO extends IO {
     }
     private static void login() {
         String cpf, password;
-        System.out.println(centerText("Login", "-"));
+        System.out.println(centerText("Login", " "));
         System.out.print("CPF: ");
         cpf = sc.nextLine();
         System.out.print("Senha: ");
@@ -60,7 +60,7 @@ public class HomeIO extends IO {
     }
     private static void addClient() {
         String name, cpf, password;
-        System.out.println(centerText("Adicionando novo Cliente", "-"));
+        System.out.println(centerText("Adicionando novo Cliente", " "));
         System.out.print("Nome completo: ");
         name = sc.nextLine();
         System.out.print("CPF: ");
