@@ -2,21 +2,20 @@ package controller;
 
 import model.Account;
 import model.Client;
+import model.Agency;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Bank {
+    private static HashMap<String, Client> clients2 = new HashMap<>();
+    private static HashMap<Integer, Agency> agencies = new HashMap<>();
     private static final List<Client> clients = new ArrayList<>();
     private static final List<Account> accounts = new ArrayList<>();
 
-    private static Client getClientByCPF(String cpf) {
-        for (Client client : clients) {
-            if (client.getCPF().equals(cpf)) {
-                return client;
-            }
-        }
-        return null;
+    protected static Client getClientByCPF(String cpf) {
+        return clients2.get(cpf);
     }
     protected static Account getAccountByID(int id) {
         for (Account account : accounts) {

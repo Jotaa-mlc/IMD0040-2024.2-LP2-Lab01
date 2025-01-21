@@ -1,17 +1,15 @@
 package model;
-
 public class Account {
-    private static int accountIDs = 0;
     private final int id;
-    private final String type;
     private final Client owner;
+    private final AccountType type;
     private float balance;
 
-    public Account(String type, Client owner) {
-        this.type = type;
+    public Account(int id, Client owner, AccountType type, float balance) {
+        this.id = id;
         this.owner = owner;
-        this.id = accountIDs++;
-        this.balance = 0;
+        this.type = type;
+        this.balance = balance;
     }
     public int getId() {
         return id;
@@ -19,15 +17,17 @@ public class Account {
     public String getOwnerName() {
         return owner.getName();
     }
-    public boolean authenticate(Client owner) {
-        return this.owner.equals(owner);
+    public boolean authenticate(Client auth) {
+        return this.owner.equals(auth);
     }
     @Override
     public String toString() {
-        return "Conta ID: " + id + " | Tipo: " + type;
+        //AccountId; Type; OwnerCPF; Balance
+        return id + ";" + type + ";" + owner.getCPF() + ";" + balance;
     }
     public void print(){
-        System.out.println("Conta ID: " + id + " | Tipo: " + type + String.format(" | Saldo: R$ %.2f", balance) + " | Proprietário: " + owner.getName());
+        //System.out.println("Conta ID: " + id + " | Tipo: " + type + String.format(" | Saldo: R$ %.2f", balance) + " | Proprietário: " + owner.getName());
+        System.out.println("Conta ID: " + id + String.format(" | Saldo: R$ %.2f", balance));
     }
     public float getBalance() { return balance; }
     public void deposit(float amount) { this.balance += amount; }

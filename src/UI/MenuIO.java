@@ -2,6 +2,7 @@ package UI;
 
 import controller.Bank;
 import model.Account;
+import model.AccountType;
 import model.Client;
 
 import java.util.ArrayList;
@@ -146,8 +147,8 @@ public class MenuIO extends Bank {
             System.out.println("Tipo de conta inválido! Cancelando operação...");
             return null;
         }
-        String type = opt == 1 ? "Corrente" : "Poupança";
-        Account account = new Account(type, client);
+        //String type = opt == 1 ? "Corrente" : "Poupança";
+        Account account = new Account(0, client, AccountType.CURRENT, 0);
         Bank.addAccount(account);
 
         System.out.println("Conta criada com sucesso!");
