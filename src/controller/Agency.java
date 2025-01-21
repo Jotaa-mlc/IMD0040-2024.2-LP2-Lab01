@@ -1,11 +1,12 @@
-package model;
+package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import controller.Loader;
+import model.Account;
+import model.Client;
 
 public class Agency {
     private final int id;
@@ -16,24 +17,25 @@ public class Agency {
     protected List<Account> getAccountByOwner(Client owner) {
         return accountsByOwner.get(owner.getCPF());
     }
-    public Agency(int id, int agAccountId) {
+    public Agency(int id) {
         this.id = id;
-        this.agAccountId = agAccountId;
+        this.agAccountId = 0;
     }
-    public int getNextAccountId() {return ++agAccountId;}
+    public int getAccountId() {return agAccountId;}
     public int getId() {return id;}
     public Account getAccountByID(int id) {
         return accounts.get(id);
     }
     public void addAccount(Account account) {
         try {
-            Loader.saveAccount(this, account);
+            Loader.saveAccount(account);
         } catch (IOException e) {
             System.err.println("Não foi possível acessar o DB da Agência " + this.getId() + ".");
             return;
         }
 
-        accounts.put(account.getId(), account);
+        accounts.put(account.getAccountId(), account);
+        agAccountId++;
         List<Account> accs = accountsByOwner.get(account.getOwnerCPF());
         if (accs != null) {
             accs.add(account);

@@ -2,9 +2,9 @@ package controller;
 
 import model.Account;
 import model.Client;
-import model.Agency;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,7 +19,13 @@ public class Bank {
         return null;
     }
     protected static List<Account> getAccountsByOwner(Client owner) {
-        return null;
+        List<Account> accounts = new ArrayList<>();
+
+        for (Agency ag : agencies.values()) {
+            accounts.addAll(ag.getAccountByOwner(owner));
+        }
+
+        return accounts;
     }
     public static boolean addClient(Client client){//consertar os retornos p/ erros
         if (!clients.containsKey(client.getCPF())) {
@@ -35,7 +41,10 @@ public class Bank {
         return false;
     }
     public static void addAccount(Account account){
-        //accounts.add(account);
+        Agency ag = agencies.get(account.getAgencyId());
+        if (ag != null) {
+            ag.addAccount(account);
+        }
     }
     public static Client login(String cpf, String password) {
         Client client = clients.get(cpf);
