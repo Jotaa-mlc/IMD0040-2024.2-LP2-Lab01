@@ -4,48 +4,41 @@ import model.Account;
 import model.Client;
 import model.Agency;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 public class Bank {
-    private static HashMap<String, Client> clients2 = new HashMap<>();
+    private static HashMap<String, Client> clients = new HashMap<>();
     private static HashMap<Integer, Agency> agencies = new HashMap<>();
-    private static final List<Client> clients = new ArrayList<>();
-    private static final List<Account> accounts = new ArrayList<>();
 
     protected static Client getClientByCPF(String cpf) {
-        return clients2.get(cpf);
+        return clients.get(cpf);
     }
     protected static Account getAccountByID(int id) {
-        for (Account account : accounts) {
-            if (account.getId() == id) {
-                return account;
-            }
-        }
         return null;
     }
     protected static List<Account> getAccountsByOwner(Client owner) {
-        List<Account> clientsAccounts = new ArrayList<>();
-        for (Account account : accounts) {
-            if (account.authenticate(owner)) {
-                clientsAccounts.add(account);
-            }
-        }
-        return clientsAccounts;
+        return null;
     }
-    public static boolean addClient(Client client){
-        if (getClientByCPF(client.getCPF()) != null) {
-            return false;
+    public static boolean addClient(Client client){//consertar os retornos p/ erros
+        if (!clients.containsKey(client.getCPF())) {
+            try {
+                Loader.saveClient(client);
+                clients.put(client.getCPF(), client);
+            } catch (IOException e) {
+                System.err.println("Não foi possível acessar o DB de Clientes.");
+                return false;//momentâneo
+            }
+            return true;
         }
-        clients.add(client);
-        return true;
+        return false;
     }
     public static void addAccount(Account account){
-        accounts.add(account);
+        //accounts.add(account);
     }
     public static Client login(String cpf, String password) {
-        Client client = getClientByCPF(cpf);
+        Client client = clients.get(cpf);
         if (client != null && client.authenticate(password)) {
             return client;
         }

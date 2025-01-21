@@ -1,7 +1,5 @@
 package model;
 
-import controller.Bank;
-
 public enum AccountType {
     CURRENT, SAVINGS, SALARY;
 

@@ -1,7 +1,10 @@
 package controller;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,13 +16,15 @@ import model.Agency;
 import model.Client;
 
 public class Loader {
-    private String agencyFileExtension = ".agency.csv";
-    private String separator = ";";
+    private static final String agencyFileExtension = ".agency.csv";
+    private static final String agenciesFolderPath = "\\data\\agencies";
+    private static final String clientsFilePath = "\\data\\clients.csv";
+    private static final String separator = ";";
 
-    public HashMap<Integer, Agency> loadAgencies(String directoryPath) {
+    public static HashMap<Integer, Agency> loadAgencies() {
         HashMap<Integer, Agency> agencies = new HashMap<>();
         List<String> fileNames = new ArrayList<>();
-        File[] files = new File(directoryPath).listFiles();
+        File[] files = new File(agenciesFolderPath).listFiles();
 
         for (File file : files) {
             if (file.isFile() && file.getName().endsWith(agencyFileExtension)) {
@@ -28,7 +33,7 @@ public class Loader {
         }
 
         for (String fileName : fileNames) {
-            File file = new File(directoryPath + fileName);
+            File file = new File(agenciesFolderPath + fileName);
             try {
                 Agency ag = loadAgency(file);
                 agencies.put(ag.getId(), ag);
@@ -39,7 +44,7 @@ public class Loader {
 
         return agencies;
     }
-    private Agency loadAgency(File csvFile) throws FileNotFoundException {
+    private static Agency loadAgency(File csvFile) throws FileNotFoundException {
         int agencyId = Integer.parseInt(csvFile.getName().substring(0, csvFile.getName().indexOf('.', 0))); //Guarda o nome do arquivo sem extensão i.e. o ID da Agencia
 
         Scanner sc = new Scanner(csvFile);
@@ -65,11 +70,9 @@ public class Loader {
         sc.close();
         return ag;
     }
-
-    public HashMap<String, Client> loadClients(String filePath) throws FileNotFoundException {
+    public static HashMap<String, Client> loadClients() throws FileNotFoundException {
         HashMap<String, Client> clients = new HashMap<>();
-
-        File file = new File(filePath);
+        File file = new File(clientsFilePath);
         Scanner sc = new Scanner(file);
         
         while (sc.hasNextLine()) {
@@ -83,6 +86,20 @@ public class Loader {
         sc.close();
         return clients;
     }
+    public static void saveAccount(Agency agency, Account account) throws IOException {
+        String filePath = agenciesFolderPath + agency.getId() + agencyFileExtension;
+        save2file(filePath, account.toString());
+    }
+    public static void saveClient(Client client) throws IOException {
+        save2file(clientsFilePath, client.toString());
+    }
 
-    
+    private static void save2file(String filePath, String msg) throws IOException {
+        FileWriter fw = new FileWriter(filePath, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.append(msg);
+        bw.newLine();
+        bw.close();
+    }
 }

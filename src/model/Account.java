@@ -17,6 +17,9 @@ public class Account {
     public String getOwnerName() {
         return owner.getName();
     }
+    protected String getOwnerCPF() {
+        return owner.getCPF();
+    }
     public boolean authenticate(Client auth) {
         return this.owner.equals(auth);
     }

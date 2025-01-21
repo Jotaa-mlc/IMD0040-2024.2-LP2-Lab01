@@ -16,6 +16,10 @@ public class Client {
     public String getCPF() {
         return CPF;
     }
+    @Override
+    public String toString() {
+        return this.Name + ";" + this.CPF + ";" + this.Password;
+    }
     public boolean authenticate(String Password) {
         return this.Password.equals(Password);
     }
