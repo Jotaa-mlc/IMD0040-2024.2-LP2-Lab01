@@ -33,26 +33,27 @@ public class MenuIO extends Bank {
         } else if (accounts.size() == 1) {
             printMenu(accounts.getFirst(), client);
         } else {
-            System.out.println("Favor escolha entre uma de suas contas, informe o ID.");
-            for (Account account : accounts) System.out.println(account.toString());
-            int id = sc.nextInt();
+            System.out.println("Escolha entre uma de suas contas, informe o número a esquerda da conta que deseja.");
+            for (int i = 0; i < accounts.size(); i++) {
+                System.out.println(i+1 + " - " + accounts.get(i).print());
+            }
+            int accountIndex = sc.nextInt();
             sc.nextLine();
 
-            for (Account account : accounts) {
-                if (account.getAccountId() == id){
-                    printMenu(account, client);
-                }
-                else {
-                    System.out.println("Você não possui nenhuma conta com esse ID.");
-                }
+            if (accountIndex > 0 && accountIndex <= accounts.size()) {
+                printMenu(accounts.get(accountIndex), client);
+            }
+            else {
+                System.out.println("Não foi possível escolher a conta.");
+                return;
             }
         }
     }
-    public static void printMenu(Account account, Client client) {
+    private static void printMenu(Account account, Client client) {
         boolean logout = false;
 
         while (!logout) {
-            System.out.println("Logado - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
+            String.format("Logado - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId());
             IO.printOptions(menuOptions);
             int command = sc.nextInt();
             sc.nextLine();

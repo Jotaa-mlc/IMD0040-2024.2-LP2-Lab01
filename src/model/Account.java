@@ -33,9 +33,8 @@ public class Account {
         //AgencyId; AccountId; Type; OwnerCPF; Balance
         return agencyId + ";" + accountId + ";" + type + ";" + owner.getCPF() + ";" + balance;
     }
-    public void print(){
-        //System.out.println("Conta ID: " + id + " | Tipo: " + type + String.format(" | Saldo: R$ %.2f", balance) + " | Proprietário: " + owner.getName());
-        System.out.println("Conta ID: " + accountId + String.format(" | Saldo: R$ %.2f", balance));
+    public String print(){
+        return String.format("ID Agência: %1$4d | ID Conta: %2$4d | Tipo: %3s | Saldo: R$ %6,.2f", agencyId, accountId, AccountType.toString(type), balance);
     }
     public float getBalance() { return balance; }
     public void deposit(float amount) { this.balance += amount; }

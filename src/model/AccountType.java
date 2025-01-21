@@ -20,4 +20,17 @@ public enum AccountType {
         }
         return type;
     }
+
+    public static String toString(AccountType type) {
+        switch (type) {
+            case CURRENT:
+                return "Corrente";
+            case SAVINGS:
+                return "Poupança";
+            case SALARY:
+                return "Salário";
+            default:
+                return null;
+        }
+    }
 }

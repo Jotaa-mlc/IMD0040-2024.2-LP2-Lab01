@@ -21,7 +21,7 @@ public class Agency {
         this.id = id;
         this.agAccountId = 0;
     }
-    public int getAccountId() {return agAccountId;}
+    public int getAgAccountId() {return agAccountId;}
     public int getId() {return id;}
     public Account getAccountByID(int id) {
         return accounts.get(id);
