@@ -25,6 +25,9 @@ public class Account {
     public String getOwnerCPF() {
         return owner.getCPF();
     }
+    public AccountType getAccountType(){
+        return this.type;
+    }
     public boolean authenticate(Client auth) {
         return this.owner.equals(auth);
     }
@@ -39,4 +42,5 @@ public class Account {
     public float getBalance() { return balance; }
     public void deposit(float amount) { this.balance += amount; }
     public void withdraw(float amount) { this.balance -= amount; }
+    public void taxar() {}
 }
