@@ -10,10 +10,10 @@ public enum AccountType {
                 type = CURRENT;
                 break;
             case 1:
-                type = CURRENT;
+                type = SAVINGS;
                 break;
             case 2:
-                type = CURRENT;
+                type = SALARY;
                 break;
             default:
                 break;
