@@ -75,4 +75,14 @@ public class Bank {
         }
         return 0;
     }
+    public static List<String> getAgenciesIds() {
+        List<String> agenciesIds = new ArrayList<>();
+        for (Agency ag : agencies.values()) {
+            agenciesIds.addLast(String.valueOf(ag.getId()));
+        }
+        return agenciesIds;
+    }
+    public static Agency getAgencyById(int id){
+        return agencies.get(id);
+    }
 }

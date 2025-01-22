@@ -1,5 +1,6 @@
 package UI;
 
+import controller.Agency;
 import controller.Bank;
 import model.Account;
 import model.AccountType;
@@ -142,14 +143,34 @@ public class MenuIO extends Bank {
     }
     private static Account addAccount(Client client) {
         System.out.println("Adicionar Conta - " + client.getName());
-        System.out.println("Qual tipo de conta deseja abrir?\t1 - Corrente\t2 - Poupança");
-        int opt = sc.nextInt();
-        if (opt > 2 || opt < 1) {
+        System.out.print("Em qual agência deseja abrir a conta?\tAgências disponíveis:");
+        List<String> agenciesIds = Bank.getAgenciesIds();
+        for (String string : agenciesIds) {
+            System.out.println(string);
+            if (!string.equals(agenciesIds.getLast())) {
+                System.out.println(" - ");
+            }
+        }
+
+        int agencyId = sc.nextInt();
+        Agency ag = Bank.getAgencyById(agencyId);
+        if (ag == null) {
+            System.out.println("A agencia que você escolheu não está disponível. Cancelando operação...");
+            return null;
+        }
+
+        System.out.println("Qual tipo de conta deseja abrir?");
+        AccountType[] types = AccountType.values();
+        for (int i = 0; i < types.length ; i++) {
+            System.out.println(i+1 + " - " + types[i]);
+        }
+        int typeInt = sc.nextInt();
+        if (typeInt < 0 || typeInt > types.length) {
             System.out.println("Tipo de conta inválido! Cancelando operação...");
             return null;
         }
         //String type = opt == 1 ? "Corrente" : "Poupança";
-        Account account = new Account(0,0, client, AccountType.CURRENT, 0);
+        Account account = new Account(agencyId,ag.getAgAccountId(), client, AccountType.fromInteger(typeInt), 0);
         Bank.addAccount(account);
 
         System.out.println("Conta criada com sucesso!");

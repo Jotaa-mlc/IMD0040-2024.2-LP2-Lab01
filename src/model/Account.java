@@ -31,10 +31,10 @@ public class Account {
     @Override
     public String toString() {
         //AgencyId; AccountId; Type; OwnerCPF; Balance
-        return agencyId + ";" + accountId + ";" + type + ";" + owner.getCPF() + ";" + balance;
+        return agencyId + ";" + accountId + ";" + type.ordinal() + ";" + owner.getCPF() + ";" + balance;
     }
     public String print(){
-        return String.format("ID Agência: %1$4d | ID Conta: %2$4d | Tipo: %3s | Saldo: R$ %6,.2f", agencyId, accountId, AccountType.toString(type), balance);
+        return String.format("ID Agência: %1$4d | ID Conta: %2$4d | Tipo: %3s | Saldo: R$ %6,.2f", agencyId, accountId, type, balance);
     }
     public float getBalance() { return balance; }
     public void deposit(float amount) { this.balance += amount; }
