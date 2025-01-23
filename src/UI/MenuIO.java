@@ -32,7 +32,7 @@ public class MenuIO extends Bank {
             sc.nextLine();
             if (command == 1) printMenu(addAccount(client), client);
         } else if (accounts.size() == 1) {
-            printMenu(accounts.getFirst(), client);
+            printMenu(accounts.get(0), client);
         } else {
             System.out.println("Escolha entre uma de suas contas, informe o número a esquerda da conta que deseja.");
             for (int i = 0; i < accounts.size(); i++) {
@@ -86,11 +86,28 @@ public class MenuIO extends Bank {
     }
     private static void transfer(Account account) {
         System.out.println("Transferência - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
+        System.out.print("Informe ID da agência para transferir: ");
+        int agencyId = sc.nextInt();
         System.out.print("Informe ID da conta para transferir: ");
-        int id = sc.nextInt();
+        int accountId = sc.nextInt();
         System.out.print("Qual valor deseja transferir? ");
         float value = sc.nextFloat();
-        switch (Bank.transfer(value, account, id)) {
+    
+        // Verificar se a agência existe
+        if (Bank.getAgencyByID(agencyId) == null) {
+            System.out.println("Não foi possível encontrar uma agência com o ID informado.");
+            System.out.println("Cancelando operação...");
+            return;
+        }
+    
+        // Verificar se a conta existe
+        if (Bank.getAccountByID(accountId) == null) {
+            System.out.println("Não foi possível encontrar uma conta com o ID informado.");
+            System.out.println("Cancelando operação...");
+            return;
+        }
+
+        switch (Bank.transfer(value, account, accountId)) {
             case 1:
                 System.out.println("Transferência realizada com sucesso!");
                 balance(account);
@@ -147,12 +164,12 @@ public class MenuIO extends Bank {
         List<String> agenciesIds = Bank.getAgenciesIds();
         for (String string : agenciesIds) {
             System.out.println(string);
-            if (!string.equals(agenciesIds.getLast())) {
+            if (!string.equals(agenciesIds.get(agenciesIds.size() - 1))) {
                 System.out.println(" - ");
             }
         }
         int agencyId = sc.nextInt();
-        Agency ag = Bank.getAgencyById(agencyId);
+        Agency ag = Bank.getAgencyByID(agencyId);
         if (ag == null) {
             System.out.println("A agencia que você escolheu não está disponível. Cancelando operação...");
             return null;
