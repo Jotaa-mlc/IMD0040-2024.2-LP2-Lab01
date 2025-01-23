@@ -1,4 +1,7 @@
 package model;
+
+import controller.Loader;
+
 public class Account {
     protected final int agencyId;
     protected final int accountId;
@@ -41,10 +44,20 @@ public class Account {
     }
     public float getBalance() { return balance; }
     public void deposit(float amount) { 
-        this.balance += amount; 
+        try {
+            Loader.saveAccount(this);
+            this.balance += amount; 
+        } catch (Exception e) {
+            System.err.println("Não foi possível salvar a alteração no DB da Agência");
+        }
     }
     public void withdraw(float amount) { 
-        this.balance -= amount; 
+        try {
+            Loader.saveAccount(this);
+            this.balance -= amount; 
+        } catch (Exception e) {
+            System.err.println("Não foi possível salvar a alteração no DB da Agência");
+        }
     }
     public void taxar() {}
 }

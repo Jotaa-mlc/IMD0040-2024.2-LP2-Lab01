@@ -1,8 +1,10 @@
 package controller;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Scanner;
 import model.Account;
 import model.AccountType;
 import model.Client;
+import model.ContaSalario;
 
 public class Loader {
     private static final String agencyFileExtension = ".agency.csv";
@@ -62,6 +65,9 @@ public class Loader {
                 Client cl = Bank.getClientByCPF(ownerCPF);
 
                 Account ac = new Account(agencyId, accountId, cl, type, balance);
+                if (type == AccountType.Salário) {
+                    ac = new ContaSalario(agencyId, accountId, cl, type, balance, data[4]);
+                }
                 ag.addAccount(ac);
             }
             sc.close();
@@ -90,10 +96,33 @@ public class Loader {
         return clients;
     }
     public static void saveAccount(Account account) throws IOException {
-        try {
-            save2file(agencyFolderPath + account.getAgencyId() + agencyFileExtension, account.toString());
-        } catch (IOException e) {
-            throw new IOException("Não foi possível salvar a alteração no DB da agência " + account.getAgencyId());
+        File file = new File(agencyFolderPath + account.getAgencyId() + agencyFileExtension);
+        List<String> lines = new ArrayList<>();
+        boolean found = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(account.getAccountId() + separator)) {
+                    lines.add(account.toString());
+                    found = true;
+                } else {
+                    lines.add(line);
+                }
+            }
+        }
+        if (found) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+        } else {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                writer.write(account.toString());
+                writer.newLine();
+            }
         }
     }
     public static void saveClient(Client client) throws IOException {
@@ -111,5 +140,12 @@ public class Loader {
         bw.append(msg);
         bw.newLine();
         bw.close();
+    }
+    public static void log(String msg) throws IOException{
+        try {
+            save2file("path", msg);
+        } catch (IOException e) {
+            throw new IOException("Não foi possível abrir o arquivo de log.");
+        }
     }
 }
