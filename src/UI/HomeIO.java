@@ -74,12 +74,12 @@ public class HomeIO extends IO {
         }
 
         Client client = new Client(name, cpf, password);
-
-        if (!Bank.addClient(client)) {
-            System.out.println("Não foi possível adicionar o novo cliente! Já existe um com este CPF.");
-        }
-        else {
+        
+        try {
+            Bank.addClient(client);
             System.out.println("Cliente adicionado com sucesso!");
+        } catch (Exception e) {
+            System.err.println(e.getMessage() + "\nCancelando operação...");
         }
     }
     private static void printGoodBye() {

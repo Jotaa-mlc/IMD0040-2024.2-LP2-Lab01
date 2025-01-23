@@ -126,7 +126,35 @@ public class Loader {
             }
         }
     }
-
+    public static void saveAgencies(HashMap<Integer, Agency> agencies) {
+        for (Agency ag : agencies.values()) {
+            try {
+                FileWriter fw = new FileWriter(agencyFolderPath + ag.getId() + agencyFileExtension, false);
+                BufferedWriter bw = new BufferedWriter(fw);
+                for (Account ac : ag.accounts.values()) {
+                    bw.append(ac.toString());
+                    bw.newLine();
+                }
+                bw.close();
+            } catch (Exception e) {
+                System.err.println("Não foi possível salvar a agencia " + ag.getId());
+            }
+        }
+    }
+    public static void saveClients(HashMap<String, Client> clients) {
+        try {
+            FileWriter fw = new FileWriter(clientsFilePath, false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (Client client : clients.values()) {
+                bw.append(client.toString());
+                bw.newLine();
+            }
+                bw.close();
+        } catch (Exception e) {
+            System.err.println("Não foi possível salvar os clientes.");
+        }
+        
+    }
     public static void saveClient(Client client) throws IOException {
         try {
             save2file(clientsFilePath, client.toString());
@@ -135,7 +163,6 @@ public class Loader {
             throw new IOException("Não foi possível salvar a alteração no DB de clientes.");
         }
     }
-
     private static void save2file(String filePath, String msg) throws IOException {
         FileWriter fw = new FileWriter(filePath, true);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -144,11 +171,11 @@ public class Loader {
         bw.newLine();
         bw.close();
     }
-    public static void log(String msg) throws IOException{
+    public static void log(String msg) {
         try {
             save2file(TransacaoFilePath, msg);
         } catch (IOException e) {
-            throw new IOException("Não foi possível abrir o arquivo de log.");
+            System.err.println("Não foi possível salvar a mensagem no arquivo de log.");
         }
     }
 }

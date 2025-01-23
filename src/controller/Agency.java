@@ -1,6 +1,6 @@
 package controller;
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +11,8 @@ import model.Client;
 public class Agency {
     private final int id;
     private int agAccountId;
-    private Map<Integer, Account> accounts;
-    private Map<String, List<Account>> accountsByOwner;
+    protected Map<Integer, Account> accounts;
+    protected Map<String, List<Account>> accountsByOwner;
 
     protected int getId() {return id;}
     protected List<Account> getAccountByOwner(Client owner) {
@@ -27,12 +27,12 @@ public class Agency {
         return accounts.get(id);
     }
     public void addAccount(Account account) {
-        try {
-            Loader.saveAccount(account);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            return;
-        }
+        // try {
+        //     Loader.saveAccount(account);
+        // } catch (IOException e) {
+        //     System.err.println(e.getMessage());
+        //     return;
+        // }
 
         accounts.put(account.getAccountId(), account);
         agAccountId++;

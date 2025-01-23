@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Bank {
-    private static HashMap<String, Client> clients = new HashMap<>();
-    private static HashMap<Integer, Agency> agencies = new HashMap<>();
+    protected static HashMap<String, Client> clients = new HashMap<>();
+    protected static HashMap<Integer, Agency> agencies = new HashMap<>();
 
     protected static Client getClientByCPF(String cpf) {
         return clients.get(cpf);
@@ -26,18 +26,10 @@ public class Bank {
 
         return accounts;
     }
-    public static boolean addClient(Client client){//consertar os retornos p/ erros
-        if (!clients.containsKey(client.getCPF())) {
-            try {
-                Loader.saveClient(client);
-                clients.put(client.getCPF(), client);
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-                return false;//momentâneo
-            }
-            return true;
-        }
-        return false;
+    public static void addClient(Client client) throws IOException {//consertar os retornos p/ erros
+        if (clients.containsKey(client.getCPF())) { throw new IllegalArgumentException("Não foi possível cadastrar o cliente, já existe um cadastro com esse CPF."); }
+            Loader.saveClient(client);
+            clients.put(client.getCPF(), client);
     }
     public static void addAccount(Account account){
         Agency ag = agencies.get(account.getAgencyId());
@@ -53,7 +45,7 @@ public class Bank {
     public static void deposit(float amount, Account account) {
         if (amount <= 0) { throw new IllegalArgumentException("Valor inválido para depósito."); }
         account.deposit(amount);
-        String.format("Depósito - Ag: %1$d Cc: %2$d - Valor R$ %6,.2f", account.getAgencyId(), account.getAccountId(), amount);
+        Loader.log(String.format("Depósito - Ag: %1$d Cc: %2$d - Valor R$ %6,.2f", account.getAgencyId(), account.getAccountId(), amount));
     }
     public static void withdraw(float amount, Account account) {
         if (amount <= 0) { throw new IllegalArgumentException("Valor inválido para saque."); }
@@ -72,7 +64,6 @@ public class Bank {
         to.deposit(amount);
         String.format("Transferência - DE Ag: %1$d Cc: %2$d - PARA Ag: %1$d Cc: %2$d - Valor R$ %6,.2f", from.getAgencyId(), from.getAccountId(), to.getAgencyId(), to.getAccountId(), amount);
     }
-
     public static List<String> getAgenciesIds() {
         List<String> agenciesIds = new ArrayList<>();
         for (Agency ag : agencies.values()) {
@@ -80,16 +71,17 @@ public class Bank {
         }
         return agenciesIds;
     }
-
     public static Agency getAgencyByID(int id) {
         return agencies.get(id);
     }
-
     public static void setClients(HashMap<String, Client> clients_) {
         clients = clients_;
     }
-
     public static void setAgencies(HashMap<Integer, Agency> agencies_) {
         agencies = agencies_;
+    }
+    protected void finalize() {
+        Loader.saveAgencies(agencies);
+        Loader.saveClients(clients);
     }
 }
