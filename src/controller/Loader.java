@@ -90,10 +90,19 @@ public class Loader {
         return clients;
     }
     public static void saveAccount(Account account) throws IOException {
-        save2file(agencyFolderPath + account.getAgencyId() + agencyFileExtension, account.toString());
+        try {
+            save2file(agencyFolderPath + account.getAgencyId() + agencyFileExtension, account.toString());
+        } catch (IOException e) {
+            throw new IOException("Não foi possível salvar a alteração no DB da agência " + account.getAgencyId());
+        }
     }
     public static void saveClient(Client client) throws IOException {
-        save2file(clientsFilePath, client.toString());
+        try {
+            save2file(clientsFilePath, client.toString());
+        }
+        catch (IOException e) {
+            throw new IOException("Não foi possível salvar a alteração no DB de clientes.");
+        }
     }
     private static void save2file(String filePath, String msg) throws IOException {
         FileWriter fw = new FileWriter(filePath, true);

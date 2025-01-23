@@ -33,7 +33,7 @@ public class Bank {
                 Loader.saveClient(client);
                 clients.put(client.getCPF(), client);
             } catch (IOException e) {
-                System.err.println("Não foi possível acessar o DB de Clientes.");
+                System.err.println(e.getMessage());
                 return false;//momentâneo
             }
             return true;

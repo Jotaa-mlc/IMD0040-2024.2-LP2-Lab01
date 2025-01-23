@@ -14,6 +14,7 @@ public class Agency {
     private Map<Integer, Account> accounts;
     private Map<String, List<Account>> accountsByOwner;
 
+    protected int getId() {return id;}
     protected List<Account> getAccountByOwner(Client owner) {
         return accountsByOwner.get(owner.getCPF());
     }
@@ -22,7 +23,6 @@ public class Agency {
         this.agAccountId = 0;
     }
     public int getAgAccountId() {return agAccountId;}
-    public int getId() {return id;}
     public Account getAccountByID(int id) {
         return accounts.get(id);
     }
@@ -30,7 +30,7 @@ public class Agency {
         try {
             Loader.saveAccount(account);
         } catch (IOException e) {
-            System.err.println("Não foi possível acessar o DB da Agência " + this.getId() + ".");
+            System.err.println(e.getMessage());
             return;
         }
 
