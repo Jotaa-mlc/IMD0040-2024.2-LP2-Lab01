@@ -53,9 +53,8 @@ public class MenuIO extends Bank {
     }
     private static void printMenu(Account account, Client client) {
         boolean logout = false;
-
         while (!logout) {
-            String.format("Logado - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId());
+            System.out.println(String.format("Logado - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
             IO.printOptions(menuOptions);
             int command = sc.nextInt();
             sc.nextLine();
@@ -86,7 +85,7 @@ public class MenuIO extends Bank {
         System.out.println("Encerrando sua secção...");
     }
     private static void transfer(Account account) {
-        System.out.println("Transferência - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
+        System.out.println(String.format("Transferênca - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.print("Informe ID da conta para transferir: ");
         int id = sc.nextInt();
         System.out.print("Qual valor deseja transferir? ");
@@ -100,7 +99,7 @@ public class MenuIO extends Bank {
         }
     }
     private static void deposit(Account account) {
-        System.out.println("Depósito - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
+        System.out.println(String.format("Depósito - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.print("Qual valor deseja depositar? ");
         float value = sc.nextFloat();
         try {
@@ -113,10 +112,9 @@ public class MenuIO extends Bank {
         
     }
     private static void withdraw(Account account) {
-        System.out.println("Saque - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
+        System.out.println(String.format("Saque - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.print("Qual valor deseja sacar? ");
         float value = sc.nextFloat();
-
         try {
             Bank.withdraw(value,account);
             System.out.println("Saque realizado com sucesso!");
@@ -126,7 +124,7 @@ public class MenuIO extends Bank {
         }
     }
     private static void balance(Account account) {
-        System.out.println("Saldo - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
+        System.out.println(String.format("Saldo - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.printf("Saldo atual: R$ %.2f%n", account.getBalance());
     }
     private static Account addAccount(Client client) {
@@ -170,6 +168,5 @@ public class MenuIO extends Bank {
         System.out.println("Conta criada com sucesso!");
         System.out.println(account.print());
         return account;
-    
     }
 }
