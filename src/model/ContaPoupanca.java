@@ -1,3 +1,5 @@
+package model;
+
 public class ContaPoupanca extends Account{
 
     public ContaPoupanca(int agencyId, int accountId, Client owner, AccountType type, float balance){
@@ -5,6 +7,6 @@ public class ContaPoupanca extends Account{
     }
 
     public void taxar(ContaPoupanca conta){
-        conta.deposit(conta.getBalance() * 0.009); // taxa de 0,9%
+        conta.deposit(conta.getBalance() * 0.009f); // taxa de 0,9%
     }
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import model.Account;
+import model.AccountType;
 import model.Client;
 
 import java.io.IOException;
@@ -55,8 +56,8 @@ public class Bank {
     }
     public static int deposit(float amount, Account account) {
 
-        if(account.getAccountType() == AccountType.SALARY){
-            
+        if(account.getAccountType() == AccountType.Salário){
+            return 1;
         }
         else{
             if (amount <= 0) { return -1; }

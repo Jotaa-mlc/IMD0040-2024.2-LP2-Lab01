@@ -1,3 +1,5 @@
+package model;
+
 public class ContaSalario extends Account{
     
     private String cpf_empregador;

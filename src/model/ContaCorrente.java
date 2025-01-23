@@ -1,3 +1,5 @@
+package model;
+
 public class ContaCorrente extends Account{
 
     public ContaCorrente(int agencyId, int accountId, Client owner, AccountType type, float balance){
