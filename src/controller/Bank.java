@@ -1,8 +1,8 @@
 package controller;
 
 import model.Account;
-import model.AccountType;
 import model.Client;
+import model.ContaSalario;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,37 +47,30 @@ public class Bank {
     }
     public static Client login(String cpf, String password) {
         Client client = clients.get(cpf);
-        if (client != null && client.authenticate(password)) {
-            return client;
-        }
+        if (client != null && client.authenticate(password)) { return client; }
         return null;
     }
-    public static int deposit(float amount, Account account) {
-
-        if(account.getAccountType() == AccountType.Salário){
-            return 1;
-        }
-        else{
-            if (amount <= 0) { return -1; }
-            account.deposit(amount);
-            return 1;
-        }
+    public static void deposit(float amount, Account account) {
+        if (amount <= 0) { throw new IllegalArgumentException("Valor inválido para depósito."); }
+        account.deposit(amount);
+        String.format("Depósito - Ag: %1$d Cc: %2$d - Valor R$ %6,.2f", account.getAgencyId(), account.getAccountId(), amount);
     }
-    public static int withdraw(float amount, Account account) {
-        if (amount <= 0) { return -1; }
-        if (account.getBalance() < amount) { return -2; }
+    public static void withdraw(float amount, Account account) {
+        if (amount <= 0) { throw new IllegalArgumentException("Valor inválido para saque."); }
+        if (amount > account.getBalance()) { throw new ArithmeticException("Saldo Insuficiente para saque."); }
         account.withdraw(amount);
-        return 1;
+        String.format("Saque - Ag: %1$d Cc: %2$d - Valor R$ %6,.2f", account.getAgencyId(), account.getAccountId(), amount);
     }
-    public static int transfer(float amount, Account from, Account to) {
-        if (amount <= 0) { return -1; }
-        if (from.getBalance() < amount) { return -2; }
-        if (to != null) {
-            from.withdraw(amount);
-            to.deposit(amount);
-            return 1;
+    public static void transfer(float amount, Account from, Account to) {
+        if (amount <= 0) { throw new IllegalArgumentException("Valor inválido para transferência."); }
+        if (amount > from.getBalance()) { throw new ArithmeticException("Saldo Insuficiente para transferir."); }
+        if (to instanceof ContaSalario) {
+            ContaSalario to_ContaSalario = (ContaSalario) to;
+            if (!from.getOwnerCPF().equals(to_ContaSalario.getCpfEmpregador())) { throw new IllegalStateException("Não foi possível realizar a transferência pois você não é o empregador dessa conta."); }
         }
-        return 0;
+        from.withdraw(amount);
+        to.deposit(amount);
+        String.format("Transferência - DE Ag: %1$d Cc: %2$d - PARA Ag: %1$d Cc: %2$d - Valor R$ %6,.2f", from.getAgencyId(), from.getAccountId(), to.getAgencyId(), to.getAccountId(), amount);
     }
 
     public static List<String> getAgenciesIds() {

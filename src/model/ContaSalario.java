@@ -10,16 +10,20 @@ public class ContaSalario extends Account{
         this.saques_efetuados = 0;
         this.cpf_empregador = CPFempregador;
     }
-
-    public void IncrementarSaque(){
-        this.saques_efetuados++;
+    public static ContaSalario fromAccount(Account ac, String cpf_empregador) {
+        return new ContaSalario(ac.agencyId, ac.accountId, ac.owner, ac.type, ac.balance, cpf_empregador);
     }
-    
-    public Boolean PodeDepositar(String CPF){
-        return (CPF == this.cpf_empregador);
+    public String getCpfEmpregador() { return cpf_empregador; }
+    public void withdraw(float amount) { 
+        if (saques_efetuados > 5) { throw new IllegalStateException("Maximo de saques já efetuados."); }
+        this.balance -= amount; 
     }
-
-    public Boolean PodeSacar(){
-        return (saques_efetuados < 10);
+    @Override
+    public String toString() {
+        //AgencyId; AccountId; Type; OwnerCPF; Balance
+        return agencyId + ";" + accountId + ";" + type.ordinal() + ";" + owner.getCPF() + ";" + balance + ";" + cpf_empregador;
+    }
+    public void taxar() {
+        saques_efetuados = 0;
     }
 }
