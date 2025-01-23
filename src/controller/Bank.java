@@ -17,6 +17,12 @@ public class Bank {
         return clients.get(cpf);
     }
     protected static Account getAccountByID(int id) {
+        for (Agency agency : agencies.values()) {
+            Account account = agency.getAccountByID(id);
+            if (account != null) {
+                return account;
+            }
+        }
         return null;
     }
     protected static List<Account> getAccountsByOwner(Client owner) {
@@ -85,11 +91,11 @@ public class Bank {
     public static List<String> getAgenciesIds() {
         List<String> agenciesIds = new ArrayList<>();
         for (Agency ag : agencies.values()) {
-            agenciesIds.addLast(String.valueOf(ag.getId()));
+            agenciesIds.add(String.valueOf(ag.getId()));
         }
         return agenciesIds;
     }
-    public static Agency getAgencyById(int id){
+    public static Agency getAgencyByID(int id){
         return agencies.get(id);
     }
     public static void setClients(HashMap<String, Client> clients_) {
