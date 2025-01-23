@@ -16,15 +16,7 @@ public class Bank {
     protected static Client getClientByCPF(String cpf) {
         return clients.get(cpf);
     }
-    protected static Account getAccountByID(int id) {
-        for (Agency agency : agencies.values()) {
-            Account account = agency.getAccountByID(id);
-            if (account != null) {
-                return account;
-            }
-        }
-        return null;
-    }
+    
     protected static List<Account> getAccountsByOwner(Client owner) {
         List<Account> accounts = new ArrayList<>();
 
@@ -77,10 +69,9 @@ public class Bank {
         account.withdraw(amount);
         return 1;
     }
-    public static int transfer(float amount, Account from, int idTo) {
+    public static int transfer(float amount, Account from, Account to) {
         if (amount <= 0) { return -1; }
         if (from.getBalance() < amount) { return -2; }
-        Account to = getAccountByID(idTo);
         if (to != null) {
             from.withdraw(amount);
             to.deposit(amount);
@@ -88,6 +79,7 @@ public class Bank {
         }
         return 0;
     }
+
     public static List<String> getAgenciesIds() {
         List<String> agenciesIds = new ArrayList<>();
         for (Agency ag : agencies.values()) {
@@ -95,12 +87,15 @@ public class Bank {
         }
         return agenciesIds;
     }
-    public static Agency getAgencyByID(int id){
+
+    public static Agency getAgencyByID(int id) {
         return agencies.get(id);
     }
+
     public static void setClients(HashMap<String, Client> clients_) {
         clients = clients_;
     }
+
     public static void setAgencies(HashMap<Integer, Agency> agencies_) {
         agencies = agencies_;
     }

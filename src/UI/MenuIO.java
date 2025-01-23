@@ -93,21 +93,21 @@ public class MenuIO extends Bank {
         System.out.print("Qual valor deseja transferir? ");
         float value = sc.nextFloat();
     
-        // Verificar se a agência existe
-        if (Bank.getAgencyByID(agencyId) == null) {
+        Agency agency = Bank.getAgencyByID(agencyId);
+        if (agency == null) {
             System.out.println("Não foi possível encontrar uma agência com o ID informado.");
             System.out.println("Cancelando operação...");
             return;
         }
-    
-        // Verificar se a conta existe
-        if (Bank.getAccountByID(accountId) == null) {
+        
+        Account targetAccount = agency.getAccountByID(accountId);
+        if (targetAccount == null) {
             System.out.println("Não foi possível encontrar uma conta com o ID informado.");
             System.out.println("Cancelando operação...");
             return;
         }
-
-        switch (Bank.transfer(value, account, accountId)) {
+    
+        switch (Bank.transfer(value, account, targetAccount)) {
             case 1:
                 System.out.println("Transferência realizada com sucesso!");
                 balance(account);
