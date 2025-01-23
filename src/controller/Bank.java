@@ -54,9 +54,15 @@ public class Bank {
         return null;
     }
     public static int deposit(float amount, Account account) {
-        if (amount <= 0) { return -1; }
-        account.deposit(amount);
-        return 1;
+
+        if(account.getAccountType() == AccountType.SALARY){
+            
+        }
+        else{
+            if (amount <= 0) { return -1; }
+            account.deposit(amount);
+            return 1;
+        }
     }
     public static int withdraw(float amount, Account account) {
         if (amount <= 0) { return -1; }
