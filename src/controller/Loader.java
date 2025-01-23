@@ -18,6 +18,7 @@ public class Loader {
     private static final String agencyFileExtension = ".agency.csv";
     private static final String agencyFolderPath = "\\data\\agencies";
     private static final String clientsFilePath = "\\data\\clients.csv";
+    private static final String TransacaoFilePath = "\\data\\transacao.log"; // novo arquivo com as tranfrencias
     private static final String separator = ";";
 
     public static HashMap<Integer, Agency> loadAgencies() throws FileNotFoundException {
@@ -96,6 +97,7 @@ public class Loader {
             throw new IOException("Não foi possível salvar a alteração no DB da agência " + account.getAgencyId());
         }
     }
+
     public static void saveClient(Client client) throws IOException {
         try {
             save2file(clientsFilePath, client.toString());
@@ -104,6 +106,7 @@ public class Loader {
             throw new IOException("Não foi possível salvar a alteração no DB de clientes.");
         }
     }
+
     private static void save2file(String filePath, String msg) throws IOException {
         FileWriter fw = new FileWriter(filePath, true);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -112,4 +115,13 @@ public class Loader {
         bw.newLine();
         bw.close();
     }
-}
+
+    public static void Log(String msg) throws IOException { // para as transacoes
+        FileWriter fw = new FileWriter(TransacaoFilePath, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+
+        bw.append(msg);
+        bw.newLine();
+        bw.close();
+    }
+}     
