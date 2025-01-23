@@ -151,7 +151,6 @@ public class MenuIO extends Bank {
                 System.out.println(" - ");
             }
         }
-
         int agencyId = sc.nextInt();
         Agency ag = Bank.getAgencyById(agencyId);
         if (ag == null) {
@@ -169,7 +168,6 @@ public class MenuIO extends Bank {
             System.out.println("Tipo de conta inválido! Cancelando operação...");
             return null;
         }
-        //String type = opt == 1 ? "Corrente" : "Poupança";
         Account account = new Account(agencyId,ag.getAgAccountId(), client, AccountType.fromInteger(typeInt), 0);
         Bank.addAccount(account);
 

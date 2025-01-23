@@ -85,4 +85,10 @@ public class Bank {
     public static Agency getAgencyById(int id){
         return agencies.get(id);
     }
+    public static void setClients(HashMap<String, Client> clients_) {
+        clients = clients_;
+    }
+    public static void setAgencies(HashMap<Integer, Agency> agencies_) {
+        agencies = agencies_;
+    }
 }
