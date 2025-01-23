@@ -33,7 +33,7 @@ public class Bank {
                 Loader.saveClient(client);
                 clients.put(client.getCPF(), client);
             } catch (IOException e) {
-                System.err.println("Não foi possível acessar o DB de Clientes.");
+                System.err.println(e.getMessage());
                 return false;//momentâneo
             }
             return true;
@@ -80,5 +80,21 @@ public class Bank {
             return 1;
         }
         return 0;
+    }
+    public static List<String> getAgenciesIds() {
+        List<String> agenciesIds = new ArrayList<>();
+        for (Agency ag : agencies.values()) {
+            agenciesIds.addLast(String.valueOf(ag.getId()));
+        }
+        return agenciesIds;
+    }
+    public static Agency getAgencyById(int id){
+        return agencies.get(id);
+    }
+    public static void setClients(HashMap<String, Client> clients_) {
+        clients = clients_;
+    }
+    public static void setAgencies(HashMap<Integer, Agency> agencies_) {
+        agencies = agencies_;
     }
 }

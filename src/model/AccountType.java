@@ -1,36 +1,23 @@
 package model;
 
 public enum AccountType {
-    CURRENT, SAVINGS, SALARY;
+    Corrente, Poupança, Salário;
 
     public static AccountType fromInteger(int i) {
         AccountType type = null;
         switch (i) {
             case 0:
-                type = CURRENT;
+                type = Corrente;
                 break;
             case 1:
-                type = CURRENT;
+                type = Poupança;
                 break;
             case 2:
-                type = CURRENT;
+                type = Salário;
                 break;
             default:
                 break;
         }
         return type;
-    }
-
-    public static String toString(AccountType type) {
-        switch (type) {
-            case CURRENT:
-                return "Corrente";
-            case SAVINGS:
-                return "Poupança";
-            case SALARY:
-                return "Salário";
-            default:
-                return null;
-        }
     }
 }
