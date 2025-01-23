@@ -5,6 +5,7 @@ import controller.Bank;
 import model.Account;
 import model.AccountType;
 import model.Client;
+import model.ContaSalario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,52 +91,39 @@ public class MenuIO extends Bank {
         int id = sc.nextInt();
         System.out.print("Qual valor deseja transferir? ");
         float value = sc.nextFloat();
-        switch (Bank.transfer(value, account, id)) {
-            case 1:
-                System.out.println("Transferência realizada com sucesso!");
-                balance(account);
-                return;
-            case 0:
-                System.out.println("Não foi possível encontrar uma conta com o ID informado.");
-                break;
-            case -1:
-                System.out.println("Valor inválido para operação!");
-                break;
-            case -2:
-                System.out.println("Saldo insuficiente!");
-                break;
+        try {
+            Bank.transfer(value, account, account);
+            System.out.println("Trasnferência realizada com sucesso!");
+            balance(account);
+        } catch (Exception e) {
+            System.err.println(e.getMessage() + "Cancelando operação...");
         }
-        System.out.println("Cancelando operação...");
     }
     private static void deposit(Account account) {
         System.out.println("Depósito - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
         System.out.print("Qual valor deseja depositar? ");
         float value = sc.nextFloat();
-        if(Bank.deposit(value, account) == 1) {
+        try {
+            Bank.deposit(value, account);
             System.out.println("Valor depositado com sucesso!");
-            balance(account);
-            return;
+            balance(account);  
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "\nCancelando operação...");
         }
-        System.out.println("Valor inválido para operação!");
-        System.out.println("Cancelando operação...");
+        
     }
     private static void withdraw(Account account) {
         System.out.println("Saque - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
         System.out.print("Qual valor deseja sacar? ");
         float value = sc.nextFloat();
-        switch (Bank.withdraw(value,account)){
-            case 1:
-                System.out.println("Saque realizado com sucesso!");
-                balance(account);
-                return;
-            case -1:
-                System.out.println("Valor inválido para operação!");
-                break;
-            case -2:
-                System.out.println("Saldo insuficiente!");
-                break;
+
+        try {
+            Bank.withdraw(value,account);
+            System.out.println("Saque realizado com sucesso!");
+            balance(account);
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "\nCancelando operação...");
         }
-        System.out.println("Cancelando operação...");
     }
     private static void balance(Account account) {
         System.out.println("Saldo - " + account.getOwnerName() + " | ID da Conta: " + account.getAccountId());
@@ -168,11 +156,20 @@ public class MenuIO extends Bank {
             System.out.println("Tipo de conta inválido! Cancelando operação...");
             return null;
         }
-        Account account = new Account(agencyId,ag.getAgAccountId(), client, AccountType.fromInteger(typeInt), 0);
-        Bank.addAccount(account);
+        AccountType type = AccountType.fromInteger(typeInt);
+        Account account = new Account(agencyId,ag.getAgAccountId(), client, type, 0);
 
+        if (type == AccountType.Salário) {
+            System.out.println("Para abrir uma conta salário precisamos do CPF do seu empregador. Por Favor informe.\nCPF do empregador: ");
+            String cpfEmpregador = sc.nextLine();
+            account = new ContaSalario(agencyId, agencyId, client, type, 0, cpfEmpregador);
+            
+        }
+        
+        Bank.addAccount(account);
         System.out.println("Conta criada com sucesso!");
-        account.print();
+        System.out.println(account.print());
         return account;
+    
     }
 }

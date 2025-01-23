@@ -1,10 +1,10 @@
 package model;
 public class Account {
-    private final int agencyId;
-    private final int accountId;
-    private final Client owner;
-    private final AccountType type;
-    private float balance;
+    protected final int agencyId;
+    protected final int accountId;
+    protected final Client owner;
+    protected final AccountType type;
+    protected float balance;
 
     public Account(int agencyId, int accountId, Client owner, AccountType type, float balance) {
         this.agencyId = agencyId;
@@ -40,7 +40,11 @@ public class Account {
         return String.format("ID Agência: %1$4d | ID Conta: %2$4d | Tipo: %3s | Saldo: R$ %6,.2f", agencyId, accountId, type, balance);
     }
     public float getBalance() { return balance; }
-    public void deposit(float amount) { this.balance += amount; }
-    public void withdraw(float amount) { this.balance -= amount; }
+    public void deposit(float amount) { 
+        this.balance += amount; 
+    }
+    public void withdraw(float amount) { 
+        this.balance -= amount; 
+    }
     public void taxar() {}
 }
