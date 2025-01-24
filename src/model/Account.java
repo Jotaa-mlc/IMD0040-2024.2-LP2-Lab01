@@ -37,26 +37,28 @@ public class Account {
     @Override
     public String toString() {
         //AgencyId; AccountId; Type; OwnerCPF; Balance
-        return agencyId + ";" + accountId + ";" + type.ordinal() + ";" + owner.getCPF() + ";" + balance;
+        return accountId + ";" + type.ordinal() + ";" + owner.getCPF() + ";" + balance;
     }
     public String print(){
-        return String.format("ID Agência: %1$4d | ID Conta: %2$4d | Tipo: %3s | Saldo: R$ %6,.2f", agencyId, accountId, type, balance);
+        return String.format("ID Agência: %1$4d | ID Conta: %2$4d | Tipo: %3$s | Saldo: R$ %4$,.2f", agencyId, accountId, type, balance);
     }
     public float getBalance() { return balance; }
     public void deposit(float amount) { 
+        this.balance += amount; 
         try {
             Loader.saveAccount(this);
-            this.balance += amount; 
         } catch (Exception e) {
             System.err.println("Não foi possível salvar a alteração no DB da Agência");
+            this.balance -= amount;
         }
     }
     public void withdraw(float amount) { 
+        this.balance -= amount; 
         try {
             Loader.saveAccount(this);
-            this.balance -= amount; 
         } catch (Exception e) {
             System.err.println("Não foi possível salvar a alteração no DB da Agência");
+            this.balance += amount;
         }
     }
     public void taxar() {}

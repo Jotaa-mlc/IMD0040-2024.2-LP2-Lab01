@@ -5,6 +5,8 @@ import controller.Bank;
 import model.Account;
 import model.AccountType;
 import model.Client;
+import model.ContaCorrente;
+import model.ContaPoupanca;
 import model.ContaSalario;
 
 import java.util.ArrayList;
@@ -33,16 +35,16 @@ public class MenuIO extends Bank {
             sc.nextLine();
             if (command == 1) printMenu(addAccount(client), client);
         } else if (accounts.size() == 1) {
-            printMenu(accounts.get(0), client);
+            printMenu(accounts.getFirst(), client);
         } else {
             System.out.println("Escolha entre uma de suas contas, informe o número a esquerda da conta que deseja.");
             for (int i = 0; i < accounts.size(); i++) {
                 System.out.println(i+1 + " - " + accounts.get(i).print());
             }
-            int accountIndex = sc.nextInt();
+            int accountIndex = sc.nextInt() - 1;
             sc.nextLine();
 
-            if (accountIndex > 0 && accountIndex <= accounts.size()) {
+            if (accountIndex >= 0 && accountIndex < accounts.size()) {
                 printMenu(accounts.get(accountIndex), client);
             }
             else {
@@ -54,7 +56,7 @@ public class MenuIO extends Bank {
     private static void printMenu(Account account, Client client) {
         boolean logout = false;
         while (!logout) {
-            System.out.println(String.format("Logado - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
+            System.out.println(String.format("Logado - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
             IO.printOptions(menuOptions);
             int command = sc.nextInt();
             sc.nextLine();
@@ -85,36 +87,38 @@ public class MenuIO extends Bank {
         System.out.println("Encerrando sua secção...");
     }
     private static void transfer(Account account) {
-        System.out.println(String.format("Transferênca - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
+        System.out.println(String.format("Transferênca - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.print("Informe ID da agência para transferir: ");
         int agencyId = sc.nextInt();
-        System.out.print("Informe ID da conta para transferir: ");
-        int accountId = sc.nextInt();
-        System.out.print("Qual valor deseja transferir? ");
-        float value = sc.nextFloat();
+
         Agency agency = Bank.getAgencyByID(agencyId);
         if (agency == null) {
-            System.out.println("Não foi possível encontrar uma agência com o ID informado.");
-            System.out.println("Cancelando operação...");
+            System.out.println("Não foi possível encontrar uma agência com o ID informado.\nCancelando operação...");
             return;
         }
-        
+
+        System.out.print("Informe ID da conta para transferir: ");
+        int accountId = sc.nextInt();
+
         Account targetAccount = agency.getAccountByID(accountId);
         if (targetAccount == null) {
-            System.out.println("Não foi possível encontrar uma conta com o ID informado.");
-            System.out.println("Cancelando operação...");
+            System.out.println("Não foi possível encontrar uma conta com o ID informado.\nCancelando operação...");
             return;
         }
+
+        System.out.print("Qual valor deseja transferir? ");
+        float value = sc.nextFloat();
+        
         try {
-            Bank.transfer(value, account, account);
+            Bank.transfer(value, account, targetAccount);
             System.out.println("Trasnferência realizada com sucesso!");
             balance(account);
         } catch (Exception e) {
-            System.err.println(e.getMessage() + "Cancelando operação...");
+            System.err.println(e.getMessage() + "\nCancelando operação...");
         }
     }
     private static void deposit(Account account) {
-        System.out.println(String.format("Depósito - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
+        System.out.println(String.format("Depósito - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.print("Qual valor deseja depositar? ");
         float value = sc.nextFloat();
         try {
@@ -127,7 +131,7 @@ public class MenuIO extends Bank {
         
     }
     private static void withdraw(Account account) {
-        System.out.println(String.format("Saque - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
+        System.out.println(String.format("Saque - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.print("Qual valor deseja sacar? ");
         float value = sc.nextFloat();
         try {
@@ -139,23 +143,26 @@ public class MenuIO extends Bank {
         }
     }
     private static void balance(Account account) {
-        System.out.println(String.format("Saldo - %1$s | ID Agência: %2$4d | ID Conta: %#3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
+        System.out.println(String.format("Saldo - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
         System.out.printf("Saldo atual: R$ %.2f%n", account.getBalance());
     }
     private static Account addAccount(Client client) {
         System.out.println("Adicionar Conta - " + client.getName());
-        System.out.print("Em qual agência deseja abrir a conta?\tAgências disponíveis:");
+        System.out.print("Em qual agência deseja abrir a conta?\tAgências disponíveis:\n");
         List<String> agenciesIds = Bank.getAgenciesIds();
         for (String string : agenciesIds) {
-            System.out.println(string);
+            System.out.print(string);
             if (!string.equals(agenciesIds.get(agenciesIds.size() - 1))) {
-                System.out.println(" - ");
+                System.out.print(" - ");
+            }
+            else {
+                System.out.println("");
             }
         }
         int agencyId = sc.nextInt();
         Agency ag = Bank.getAgencyByID(agencyId);
         if (ag == null) {
-            System.out.println("A agencia que você escolheu não está disponível. Cancelando operação...");
+            System.out.println("A agencia que você escolheu não está disponível.\nCancelando operação...");
             return null;
         }
 
@@ -164,21 +171,29 @@ public class MenuIO extends Bank {
         for (int i = 0; i < types.length ; i++) {
             System.out.println(i+1 + " - " + types[i]);
         }
-        int typeInt = sc.nextInt();
-        if (typeInt < 0 || typeInt > types.length) {
-            System.out.println("Tipo de conta inválido! Cancelando operação...");
+        int typeInt = sc.nextInt()-1;
+        if (typeInt < 0 || typeInt >= types.length) {
+            System.out.println("Tipo de conta inválido!\nCancelando operação...");
             return null;
         }
         AccountType type = AccountType.fromInteger(typeInt);
         Account account = new Account(agencyId,ag.getAgAccountId(), client, type, 0);
-
-        if (type == AccountType.Salário) {
-            System.out.println("Para abrir uma conta salário precisamos do CPF do seu empregador. Por Favor informe.\nCPF do empregador: ");
-            String cpfEmpregador = sc.nextLine();
-            account = new ContaSalario(agencyId, agencyId, client, type, 0, cpfEmpregador);
-            
-        }
-        
+        switch (type) {
+            case AccountType.Corrente:
+                account = new ContaCorrente(agencyId, ag.getAgAccountId(), client, type, 0);
+                break;
+            case AccountType.Poupança:
+                account = new ContaPoupanca(agencyId, ag.getAgAccountId(), client, type, 0);
+                break;
+            case AccountType.Salário:
+                System.out.println("Para abrir uma conta salário precisamos do CPF do seu empregador. Por Favor informe.\nCPF do empregador: ");
+                sc.nextLine();
+                String cpfEmpregador = sc.nextLine();
+                account = new ContaSalario(agencyId, ag.getAgAccountId(), client, type, 0, cpfEmpregador);
+                break;
+            default:
+                break;
+        }      
         Bank.addAccount(account);
         System.out.println("Conta criada com sucesso!");
         System.out.println(account.print());

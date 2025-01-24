@@ -1,5 +1,7 @@
 package model;
 
+import controller.Loader;
+
 public class ContaSalario extends Account{
     
     private String cpf_empregador;
@@ -14,16 +16,23 @@ public class ContaSalario extends Account{
         return new ContaSalario(ac.agencyId, ac.accountId, ac.owner, ac.type, ac.balance, cpf_empregador);
     }
     public String getCpfEmpregador() { return cpf_empregador; }
-    public void withdraw(float amount) { 
+    @Override public void withdraw(float amount) { 
         if (saques_efetuados > 5) { throw new IllegalStateException("Maximo de saques já efetuados."); }
         this.balance -= amount; 
+        saques_efetuados++;
+        try {
+            Loader.saveAccount(this);
+        } catch (Exception e) {
+            System.err.println("Não foi possível salvar a alteração no DB da Agência");
+            this.balance += amount;
+            saques_efetuados--;
+        }
     }
-    @Override
-    public String toString() {
-        //AgencyId; AccountId; Type; OwnerCPF; Balance
-        return agencyId + ";" + accountId + ";" + type.ordinal() + ";" + owner.getCPF() + ";" + balance + ";" + cpf_empregador;
+    @Override public String toString() {
+        return accountId + ";" + type.ordinal() + ";" + owner.getCPF() + ";" + balance + ";" + cpf_empregador;
     }
-    public void taxar() {
-        saques_efetuados = 0;
+    @Override public void taxar() {
+        this.saques_efetuados = 0;
+        Loader.log(String.format("Restauração de saques - Ag: %1$d Cc: %2$d", this.getAgencyId(), this.getAccountId()));
     }
 }

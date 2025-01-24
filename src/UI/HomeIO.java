@@ -34,6 +34,9 @@ public class HomeIO extends IO {
                 case 3://Encerrar Programa
                     exit = true;
                     break;
+                case 123://Encerrar Programa
+                    Bank.processar();
+                    break;
                 default:
                     printInvalidCommand();
                     break;

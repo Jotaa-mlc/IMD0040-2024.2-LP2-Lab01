@@ -15,13 +15,15 @@ import java.util.Scanner;
 import model.Account;
 import model.AccountType;
 import model.Client;
+import model.ContaCorrente;
+import model.ContaPoupanca;
 import model.ContaSalario;
 
 public class Loader {
     private static final String agencyFileExtension = ".agency.csv";
-    private static final String agencyFolderPath = "\\data\\agencies";
-    private static final String clientsFilePath = "\\data\\clients.csv";
-    private static final String TransacaoFilePath = "\\data\\transacao.log"; // novo arquivo com as tranfrencias
+    private static final String agencyFolderPath = "data\\agencies";
+    private static final String clientsFilePath = "data\\clients.csv";
+    private static final String TransacaoFilePath = "data\\transacao.log"; // novo arquivo com as tranfrencias
     private static final String separator = ";";
 
     public static HashMap<Integer, Agency> loadAgencies() throws FileNotFoundException {
@@ -39,7 +41,7 @@ public class Loader {
         }
 
         for (String fileName : fileNames) {
-            File file = new File(agencyFolderPath + fileName);
+            File file = new File(agencyFolderPath + "\\" + fileName);
             try {
                 Agency ag = loadAgency(file);
                 agencies.put(ag.getId(), ag);
@@ -66,8 +68,18 @@ public class Loader {
                 Client cl = Bank.getClientByCPF(ownerCPF);
 
                 Account ac = new Account(agencyId, accountId, cl, type, balance);
-                if (type == AccountType.Salário) {
-                    ac = new ContaSalario(agencyId, accountId, cl, type, balance, data[4]);
+                switch (ac.getAccountType()) {
+                    case AccountType.Corrente:
+                        ac = new ContaCorrente(agencyId, accountId, cl, type, balance);
+                        break;
+                    case AccountType.Poupança:
+                        ac = new ContaPoupanca(agencyId, accountId, cl, type, balance);
+                        break;
+                    case AccountType.Salário:
+                        ac = new ContaSalario(agencyId, accountId, cl, type, balance, data[4]);
+                        break;
+                    default:
+                        break;
                 }
                 ag.addAccount(ac);
             }
@@ -97,7 +109,7 @@ public class Loader {
         return clients;
     }
     public static void saveAccount(Account account) throws IOException {
-        File file = new File(agencyFolderPath + account.getAgencyId() + agencyFileExtension);
+        File file = new File(agencyFolderPath + "\\" + account.getAgencyId() + agencyFileExtension);
         List<String> lines = new ArrayList<>();
         boolean found = false;
 
@@ -125,35 +137,6 @@ public class Loader {
                 writer.newLine();
             }
         }
-    }
-    public static void saveAgencies(HashMap<Integer, Agency> agencies) {
-        for (Agency ag : agencies.values()) {
-            try {
-                FileWriter fw = new FileWriter(agencyFolderPath + ag.getId() + agencyFileExtension, false);
-                BufferedWriter bw = new BufferedWriter(fw);
-                for (Account ac : ag.accounts.values()) {
-                    bw.append(ac.toString());
-                    bw.newLine();
-                }
-                bw.close();
-            } catch (Exception e) {
-                System.err.println("Não foi possível salvar a agencia " + ag.getId());
-            }
-        }
-    }
-    public static void saveClients(HashMap<String, Client> clients) {
-        try {
-            FileWriter fw = new FileWriter(clientsFilePath, false);
-            BufferedWriter bw = new BufferedWriter(fw);
-            for (Client client : clients.values()) {
-                bw.append(client.toString());
-                bw.newLine();
-            }
-                bw.close();
-        } catch (Exception e) {
-            System.err.println("Não foi possível salvar os clientes.");
-        }
-        
     }
     public static void saveClient(Client client) throws IOException {
         try {
