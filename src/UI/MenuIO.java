@@ -30,14 +30,14 @@ public class MenuIO extends Bank {
         List<Account> accounts = Bank.getAccountsByOwner(client);
 
         if (accounts.isEmpty()) {
-            System.out.println("Não temos nenhuma conta registrada no seu nome.\nDeseja abrir uma? 1 - para sim");
+            System.out.println("Não temos nenhuma conta registrada no seu nome.\nDeseja abrir uma? 1 - para sim\n");
             int command = sc.nextInt();
             sc.nextLine();
             if (command == 1) printMenu(addAccount(client), client);
         } else if (accounts.size() == 1) {
             printMenu(accounts.getFirst(), client);
         } else {
-            System.out.println("Escolha entre uma de suas contas, informe o número a esquerda da conta que deseja.");
+            System.out.println("\nEscolha entre uma de suas contas, informe o número a esquerda da conta que deseja.");
             for (int i = 0; i < accounts.size(); i++) {
                 System.out.println(i+1 + " - " + accounts.get(i).print());
             }
@@ -88,30 +88,30 @@ public class MenuIO extends Bank {
     }
     private static void transfer(Account account) {
         System.out.println(String.format("Transferênca - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
-        System.out.print("Informe ID da agência para transferir: ");
+        System.out.print("\nInforme ID da agência para transferir: ");
         int agencyId = sc.nextInt();
 
         Agency agency = Bank.getAgencyByID(agencyId);
         if (agency == null) {
-            System.out.println("Não foi possível encontrar uma agência com o ID informado.\nCancelando operação...");
+            System.out.println("\nNão foi possível encontrar uma agência com o ID informado.\nCancelando operação...");
             return;
         }
 
-        System.out.print("Informe ID da conta para transferir: ");
+        System.out.print("\nInforme ID da conta para transferir: ");
         int accountId = sc.nextInt();
 
         Account targetAccount = agency.getAccountByID(accountId);
         if (targetAccount == null) {
-            System.out.println("Não foi possível encontrar uma conta com o ID informado.\nCancelando operação...");
+            System.out.println("\nNão foi possível encontrar uma conta com o ID informado.\nCancelando operação...");
             return;
         }
 
-        System.out.print("Qual valor deseja transferir? ");
+        System.out.print("\nQual valor deseja transferir? ");
         float value = sc.nextFloat();
         
         try {
             Bank.transfer(value, account, targetAccount);
-            System.out.println("Trasnferência realizada com sucesso!");
+            System.out.println("\nTrasnferência realizada com sucesso!");
             balance(account);
         } catch (Exception e) {
             System.err.println(e.getMessage() + "\nCancelando operação...");
@@ -123,7 +123,7 @@ public class MenuIO extends Bank {
         float value = sc.nextFloat();
         try {
             Bank.deposit(value, account);
-            System.out.println("Valor depositado com sucesso!");
+            System.out.println("\nValor depositado com sucesso!");
             balance(account);  
         } catch (Exception e) {
             System.out.println(e.getMessage() + "\nCancelando operação...");
@@ -132,11 +132,11 @@ public class MenuIO extends Bank {
     }
     private static void withdraw(Account account) {
         System.out.println(String.format("Saque - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
-        System.out.print("Qual valor deseja sacar? ");
+        System.out.print("\nQual valor deseja sacar? ");
         float value = sc.nextFloat();
         try {
             Bank.withdraw(value,account);
-            System.out.println("Saque realizado com sucesso!");
+            System.out.println("\nSaque realizado com sucesso!");
             balance(account);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "\nCancelando operação...");
@@ -144,7 +144,7 @@ public class MenuIO extends Bank {
     }
     private static void balance(Account account) {
         System.out.println(String.format("Saldo - %1$s | ID Agência: %2$4d | ID Conta: %3$4d", account.getOwnerName(), account.getAgencyId(), account.getAccountId()));
-        System.out.printf("Saldo atual: R$ %.2f%n", account.getBalance());
+        System.out.printf("\nSaldo atual: R$ %.2f%n", account.getBalance());
     }
     private static Account addAccount(Client client) {
         System.out.println("Adicionar Conta - " + client.getName());
@@ -166,7 +166,7 @@ public class MenuIO extends Bank {
             return null;
         }
 
-        System.out.println("Qual tipo de conta deseja abrir?");
+        System.out.println("\nQual tipo de conta deseja abrir?");
         AccountType[] types = AccountType.values();
         for (int i = 0; i < types.length ; i++) {
             System.out.println(i+1 + " - " + types[i]);
@@ -195,7 +195,7 @@ public class MenuIO extends Bank {
                 break;
         }      
         Bank.addAccount(account);
-        System.out.println("Conta criada com sucesso!");
+        System.out.println("\nConta criada com sucesso!");
         System.out.println(account.print());
         return account;
     }
