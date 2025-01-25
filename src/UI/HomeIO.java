@@ -19,7 +19,7 @@ public class HomeIO extends IO {
         boolean exit = false;
 
         while (!exit) {
-            String greetings = "Bem vindo ao LP2 Bank";
+            String greetings = "\nBem vindo ao LP2 Bank";
             System.out.println("#" + centerText(greetings, " ") + "#");
             printOptions(homeOptions);
             int command = sc.nextInt();
@@ -54,11 +54,11 @@ public class HomeIO extends IO {
 
         Client client = Bank.login(cpf, password);
         if (client != null) {
-            System.out.println("Olá, seja bem vindo " + client.getName() + "!");
+            System.out.println("Olá, seja bem vindo " + client.getName() + "!\n");
             MenuIO.chooseAccount(client);
         }
         else {
-            System.out.println("Não foi possível realizar a login!");
+            System.out.println("Não foi possível realizar a login!\n");
         }
     }
     private static void addClient() {
@@ -86,7 +86,7 @@ public class HomeIO extends IO {
         }
     }
     private static void printGoodBye() {
-        System.out.println("Muito obrigado por usar os serviços do LP2 Bank!");
+        System.out.println("\nMuito obrigado por usar os serviços do LP2 Bank!");
         System.out.println("Até a próxima!");
     }
 }
